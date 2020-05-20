@@ -1,7 +1,6 @@
 local Logger = require('ge_tts/Logger')
 local ObjectUtils = require('ge_tts/ObjectUtils')
 local TableUtils = require('ge_tts/TableUtils')
-local Vector3 = require('ge_tts/Vector3')
 local Zone = require('ge_tts/Zone')
 
 ---@class ge_tts__HandZone : ge_tts__Zone

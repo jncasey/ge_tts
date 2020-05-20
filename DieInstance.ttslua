@@ -1,7 +1,6 @@
 local EventManager = require('ge_tts/EventManager')
 local Instance = require('ge_tts/Instance')
 local Object = require('ge_tts/Object')
-local Vector3 = require('ge_tts/Vector3')
 
 ---@class ge_tts__DieInstance : ge_tts__Instance
 
@@ -82,7 +81,7 @@ local onObjectUpdating = function(object, playerColor)
                 return true
             end
 
-            isRolling = object.getRotationValue() ~= initialRotationValue and Vector3.lengthSquared(object.getAngularVelocity()) > MIN_ROLL_ANGULAR_VELOCITY_SQUARED
+            isRolling = object.getRotationValue() ~= initialRotationValue and Vector.sqrMagnitude(object.getAngularVelocity()) > MIN_ROLL_ANGULAR_VELOCITY_SQUARED
             return isRolling or object.resting
         end, 20)
     end

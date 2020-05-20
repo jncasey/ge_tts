@@ -1,5 +1,4 @@
 local TableUtils = require('ge_tts/TableUtils')
-local Vector3 = require('ge_tts/Vector3')
 local Zone = require('ge_tts/Zone')
 
 local MAX_DROP_VELOCITY_SQUARED = 5 * 5 -- 5 in/sec
@@ -64,8 +63,8 @@ setmetatable(DropZone, TableUtils.merge(getmetatable(Zone), {
         ---@type ge_tts__DropZone_Facing
         local facing = DropZone.Facing.UP
 
-        ---@type ge_tts__Vector3
-        local dropOffset = Vector3()
+        ---@type tts__Vector
+        local dropOffset = Vector()
 
         if DropZone.isSavedState(positionTriggerOrSavedState) then
             local data = --[[---@type ge_tts__DropZone_SavedState]] positionTriggerOrSavedState
@@ -74,7 +73,7 @@ setmetatable(DropZone, TableUtils.merge(getmetatable(Zone), {
             rotationEnabled = data.rotationEnabled
             rotationAxis = data.rotationAxis
             facing = data.facing
-            dropOffset = Vector3(data.dropOffset)
+            dropOffset = Vector(data.dropOffset)
         elseif triggerProvided then
             occupantScale = --[[---@type nil | number]] nilOrRotationOrOccupantScale
         else
@@ -116,14 +115,14 @@ setmetatable(DropZone, TableUtils.merge(getmetatable(Zone), {
             facing = face
         end
 
-        ---@return ge_tts__Vector3
+        ---@return tts__Vector
         function self.getDropOffset()
             return dropOffset
         end
 
         ---@param offset tts__VectorShape
         function self.setDropOffset(offset)
-            dropOffset = Vector3(offset)
+            dropOffset = Vector(offset)
         end
 
         function self.getZoneType()
@@ -138,7 +137,7 @@ setmetatable(DropZone, TableUtils.merge(getmetatable(Zone), {
         ---@param dynamicallyDropped boolean @true if running as a result of a call to `drop()`, false otherwise (i.e. running because of a `onDrop` event)
         ---@return boolean
         function self.onDrop(colorName, object, dynamicallyDropped)
-            if (not dynamicallyDropped and Vector3.lengthSquared(object.getVelocity()) > MAX_DROP_VELOCITY_SQUARED)
+            if (not dynamicallyDropped and Vector.sqrMagnitude(object.getVelocity()) > MAX_DROP_VELOCITY_SQUARED)
                 or not superOnDrop(colorName, object, false)
             then
                 return false
@@ -211,7 +210,7 @@ setmetatable(DropZone, TableUtils.merge(getmetatable(Zone), {
                 rotationEnabled = rotationEnabled,
                 rotationAxis = rotationAxis,
                 facing = facing,
-                dropOffset = dropOffset.toData()
+                dropOffset = dropOffset
             })
         end
 

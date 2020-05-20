@@ -4,7 +4,6 @@ local Logger = require('ge_tts/Logger')
 local Object = require('ge_tts/Object')
 local ObjectUtils = require('ge_tts/ObjectUtils')
 local TableUtils = require('ge_tts/TableUtils')
-local Vector3 = require('ge_tts/Vector3')
 
 ---@type table<tts__ScriptingTrigger, ge_tts__Zone>
 local scriptingTriggerZoneMap = {}
@@ -72,9 +71,9 @@ local function disassociateOccupyingObject(zone, object, disassociateInstances)
     end
 end
 
----@param position ge_tts__Vector3
----@param rotation ge_tts__Vector3
----@param scale ge_tts__Vector3
+---@param position tts__Vector
+---@param rotation tts__Vector
+---@param scale tts__Vector
 ---@param callback fun(object: tts__ScriptingTrigger): void @TTS object spawned callback
 ---@return tts__ScriptingTrigger
 local function spawn(position, rotation, scale, callback)
@@ -150,9 +149,9 @@ setmetatable(Zone, {
             occupyingObjects = {}
 
             if type(positionOrTriggerOrSavedState) == 'table' then
-                local position = Vector3(--[[---@type tts__VectorShape]] positionOrTriggerOrSavedState)
-                local rotation = Vector3(--[[---@type tts__VectorShape]] nilOrRotation)
-                local scale = Vector3(--[[---@type tts__VectorShape]] nilOrScale)
+                local position = Vector(--[[---@type tts__Vector]] positionOrTriggerOrSavedState)
+                local rotation = Vector(--[[---@type tts__Vector]] nilOrRotation)
+                local scale = Vector(--[[---@type tts__Vector]] nilOrScale)
 
                 scriptingTrigger = spawn(position, rotation, scale, function()
                     self.onSpawned()
@@ -184,19 +183,19 @@ setmetatable(Zone, {
         function self.onSpawned()
         end
 
-        ---@return ge_tts__Vector3
+        ---@return tts__Vector
         function self.getPosition()
-            return Vector3(scriptingTrigger.getPosition())
+            return Vector(scriptingTrigger.getPosition())
         end
 
-        ---@return ge_tts__Vector3
+        ---@return Vector
         function self.getRotation()
-            return Vector3(scriptingTrigger.getRotation())
+            return Vector(scriptingTrigger.getRotation())
         end
 
-        ---@return ge_tts__Vector3
+        ---@return Vector
         function self.getScale()
-            return Vector3(scriptingTrigger.getScale())
+            return Vector(scriptingTrigger.getScale())
         end
 
         ---@return nil | tts__ScriptingTrigger @Associated TTS scripting trigger
@@ -440,7 +439,7 @@ local function onObjectDrop(colorName, object)
         local objectPosition = object.getPosition()
 
         local zoneDistances = TableUtils.map(objectZones,  function(zone)
-            local distanceSquared = Vector3.distanceSquared(objectPosition, (--[[---@type tts__ScriptingTrigger]] zone.getScriptingTrigger()).getPosition())
+            local distanceSquared = Vector.sqrDistance(objectPosition, (--[[---@type tts__ScriptingTrigger]] zone.getScriptingTrigger()).getPosition())
             return {distanceSquared = distanceSquared, zone = zone}
         end)
 
