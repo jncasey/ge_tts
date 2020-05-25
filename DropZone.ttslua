@@ -117,7 +117,7 @@ setmetatable(DropZone, TableUtils.merge(getmetatable(Zone), {
 
         ---@return tts__Vector
         function self.getDropOffset()
-            return dropOffset
+            return Vector(dropOffset)
         end
 
         ---@param offset tts__VectorShape
